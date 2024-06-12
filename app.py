@@ -1,10 +1,13 @@
 import gradio as gr
 import random
+import logging
 from backend.utils import (
     generate_quiz,
     get_closed_book_answers,
     get_web_rag_answers_and_snippets,
 )
+
+logging.basicConfig(level=logging.INFO)
 
 
 def goto_llm_tab():
@@ -201,7 +204,7 @@ URL_EXAMPLES = [
 
 examples_to_show = [URL_EXAMPLES[0]] + random.sample(URL_EXAMPLES[1:], 6)
 
-with open("README.md", "r") as fin:
+with open("README.md", "r", encoding='utf-8') as fin:
     info_md = (
         fin.read()
         .split("<!--- Include in Info tab -->")[-1]
@@ -347,9 +350,11 @@ with gr.Blocks(
         )
         let_llm_play_btn.click(fn=goto_llm_tab, inputs=[], outputs=tabs)
 
-
+logging.info("Lancement de l'interface Gradio...")
 demo.queue(default_concurrency_limit=5).launch(
     show_api=False,
     server_name="0.0.0.0",
     allowed_paths=["/"],
 )
+
+logging.info("Interface Gradio lancée.")
